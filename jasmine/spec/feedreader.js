@@ -27,9 +27,7 @@ $(function() {
             expect(allFeeds.length).not.toBe(0);
         });
 
-        /* TODO: Write a test that loops through each feed
-         * in the allFeeds object and ensures it has a URL defined
-         * and that the URL is not empty.
+        /* This test firstly checks feed url is defined and then it checks feed url that is not empty in allFeeds objects
          */
         it("feed URLs are defined and not empty", function () {
             allFeeds.forEach(feed => {
@@ -38,9 +36,7 @@ $(function() {
           });
         });
 
-        /* TODO: Write a test that loops through each feed
-         * in the allFeeds object and ensures it has a name defined
-         * and that the name is not empty.
+         /* This test firstly checks feed name is defined and then it checks feed name that is not empty in allFeeds objects
          */
         it("feed name is defined and it is not empty", function() {
             allFeeds.forEach(feed => {
@@ -49,49 +45,39 @@ $(function() {
               })
          });
     });
-
-    /* TODO: Write a new test suite named "The menu" */
-
-    describe("The menu", function () {
-        /* TODO: Write a test that ensures the menu element is
-        * hidden by default. You"ll have to analyze the HTML and
-        * the CSS to determine how we"re performing the
-        * hiding/showing of the menu element.
-        */
-
-        let body = $("body");
+    
+    describe("The menu", function () {// Test suite name is "The menu"
+        /* This test checks menu element is hidden. When I check HTML code, I find body has menu class. Then I check Css file, 
+        * I find that menu-hidden class contains which type of styling code has.
+         */
+        let body = $("body");//body has menu-hidden in HTML code
         it("the menu element is hidden by default", function () {
             expect(body.hasClass("menu-hidden")).toBe(true);
         });
-
-        /* TODO: Write a test that ensures the menu changes
-        * visibility when the menu icon is clicked. This test
-        * should have two expectations: does the menu display when
-        * clicked and does it hide when clicked again.
+        
+        /* This test checks when menu icon clicked, menu should be displayed and then menu icon clicked in secondly, 
+        * menu should be hidden in HTML 
         */
         let menuIcon = $(".menu-icon-link");
         it("the menu changes the visibility when menu icon is clicked", function () {
             menuIcon.click(); 
-            expect(body.hasClass("menu-hidden")).toBe(false);
+            expect(body.hasClass("menu-hidden")).toBe(true);
 
             menuIcon.click(); 
-            expect(body.hasClass("menu-hidden")).toBe(true);
+            expect(body.hasClass("menu-hidden")).toBe(false);
         });
     });
-    /* TODO: Write a new test suite named "Initial Entries" */
         
-    describe("Initial Entries", function() {
+    describe("Initial Entries", function() { // Test suite name is "Initial Entries"
         //refer by: https://jasmine.github.io/tutorials/async callbacks section
+        //this function get initial entries which using loadFeed from app.js and beforeEach test checks loadfeed run for initial entries
         beforeEach(function(done) {
             loadFeed(0, function() {
                 done();
             });
         });
-        /* TODO: Write a test that ensures when the loadFeed
-        * function is called and completes its work, there is at least
-        * a single .entry element within the .feed container.
-        * Remember, loadFeed() is asynchronous so this test will require
-        * the use of Jasmine"s beforeEach and asynchronous done() function.
+        
+        /* This test checks that at least one feed have an entry in coming loadFeed() function 
         */
         it("there is at least a single .entry element within the .feed container", function(done) {
             expect(document.querySelectorAll(".feed .entry").length).toBeGreaterThan(0);
@@ -99,32 +85,34 @@ $(function() {
         });
     });
 
-    /* TODO: Write a new test suite named "New Feed Selection" */
-    describe("New Feed Selection", function() {
-        /* TODO: Write a test that ensures when a new feed is loaded
-         * by the loadFeed function that the content actually changes.
-         * Remember, loadFeed() is asynchronous.
-         */
+    describe("New Feed Selection", function() { // Test suite name is "New Feed Selection"
+        
+        /* This beforeEach test checks that when loadfeed gets first feed and then it waits until second one is getting to finish 
+        */
         let currentFeed;
         let newFeed;
         //refer by: https://jasmine.github.io/tutorials/async callbacks section
         beforeEach(function(done) {
             loadFeed(0, function() {
                 currentFeed = $(".feed").html();
+                loadFeed(1, function() {
+                    newFeed = $(".feed").html();
+                    done();
+                });
                 done();
             });
         });
 
+        /* This test firstly checks that currentFeed is defined and is not empty
+        * Then, it checks that newFeed is defined and is not empty
+        * Furthermore, when two feeds are greatly well loaded, test checks that these two feeds are not equal.
+        */
         it("when a new feed is loaded by the loadFeed function that the content actually changes", function(done) {
-            loadFeed(1, function() {
-                newFeed = $(".feed").html();
-                expect(currentFeed).toBeDefined();
-                expect(currentFeed.length).not.toBe(0);
-                expect(newFeed).toBeDefined();
-                expect(newFeed.length).not.toBe(0);
-                expect(currentFeed).not.toEqual(currentFeed);
-                done();
-            });
+            expect(currentFeed).toBeDefined();
+            expect(currentFeed.length).not.toBe(0);
+            expect(newFeed).toBeDefined();
+            expect(newFeed.length).not.toBe(0);
+            expect(currentFeed).not.toEqual(newFeed);
             done();
         })
     });
